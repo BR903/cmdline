@@ -1,0 +1,17 @@
+#!/bin/bash
+binary=${1:-./stub}
+rm -f ./tests/pace.out
+for a in "-pram2D - data -S . 2 --quiet -pxD" \
+	 "-pram2D - data -S . 2 --quiet -pd" \
+         "-pram2D -- ata -S . 2 --quiet -pxD" \
+	 "--no-passwords --read-only --buffer-audio --mud-sucking=2D - data --save-directory=. 2 -q --no-passwords --xfiles --data-directory -dd" ; do
+  echo '/*' $a '*/'
+  $binary $a
+done >> ./tests/pace.out
+for a in one\ \"two\ th\"ree\ four \
+	 five\'\ \'six\"\ \"seven\ eight \
+	 \"nine\\\"\ ten\"\ \'eleven\\\"\ twelve\'\ thirteen ; do
+  echo '/*' $a '*/'
+  echo $a | $binary
+done >> ./tests/pace.out
+diff ./tests/pace.check ./tests/pace.out

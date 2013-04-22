@@ -1,0 +1,61 @@
+/* -pram2D - data -S . 2 --quiet -pxD */
+-p == true
+-r == true
+-a == true
+-m == "2D"
+arg 1 == "-"
+arg 2 == "data"
+-S == "."
+arg 3 == "2"
+-q == true
+-p == true
+invalid option "-x"
+no argument for "-D"
+/* -pram2D - data -S . 2 --quiet -pd */
+-p == true
+-r == true
+-a == true
+-m == "2D"
+arg 1 == "-"
+arg 2 == "data"
+-S == "."
+arg 3 == "2"
+-q == true
+-p == true
+-d == true
+/* -pram2D -- ata -S . 2 --quiet -pxD */
+-p == true
+-r == true
+-a == true
+-m == "2D"
+arg 1 == "ata"
+arg 2 == "-S"
+arg 3 == "."
+arg 4 == "2"
+arg 5 == "--quiet"
+arg 6 == "-pxD"
+/* --no-passwords --read-only --buffer-audio --mud-sucking=2D - data --save-directory=. 2 -q --no-passwords --xfiles --data-directory -dd */
+-p == true
+-r == true
+-a == true
+-m == "2D"
+arg 1 == "-"
+arg 2 == "data"
+-S == "."
+arg 3 == "2"
+-q == true
+-p == true
+invalid option "--xfiles"
+no argument for "--data-directory"
+-d == "d"
+/* one "two th"ree four */
+arg 1 == <one>
+arg 2 == <two three>
+arg 3 == <four>
+/* five' 'six" "seven eight */
+arg 1 == <five six seven>
+arg 2 == <eight>
+/* "nine\" ten" 'eleven\" twelve' thirteen */
+arg 1 == <nine" ten>
+arg 2 == <eleven\" twelve>
+arg 3 == <thirteen>

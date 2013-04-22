@@ -1,0 +1,4 @@
+This is a getopt_long() replacement that I use when I'm writing code
+that needs to be portable to non-Unix environments (i.e. Windows). It
+uses a different organization, making use of callbacks instead of
+having a function invoked repeatedly.
