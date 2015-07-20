@@ -10,4 +10,4 @@ test: stub
 	echo ok
 
 clean:
-	rm -f cmdline.o stub stub.o
+	rm -f cmdline.o stub stub.o tests/pace.out
