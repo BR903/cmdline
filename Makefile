@@ -5,6 +5,9 @@ cmdline.o: cmdline.c cmdline.h
 stub: stub.c cmdline.o
 	gcc -Wall -W -o $@ $^
 
+fstub: fstub.c cmdline.o
+	gcc -Wall -W -o $@ $^
+
 test: stub
 	./pace
 	echo ok

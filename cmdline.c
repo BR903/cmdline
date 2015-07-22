@@ -2,6 +2,7 @@
  * Raiter. This code is in the public domain.
  */
 
+#include	<stdio.h>
 #include	<stdlib.h>
 #include	<string.h>
 #include	<ctype.h>
@@ -10,7 +11,7 @@
 #define	docallback(opt, val) \
 	    do { if ((r = callback(opt, val, data)) != 0) return r; } while (0)
 
-/* Initialize the cmdlineinfo state structure.
+/* Parse the given cmdline arguments.
  */
 int readoptions(option const* list, int argc, char **argv,
 		int (*callback)(int, char const*, void*), void *data)
@@ -111,6 +112,85 @@ int readoptions(option const* list, int argc, char **argv,
 	}
     }
     return 0;
+}
+
+/* Verify that str points to an ASCII zero or one (optionally with
+ * whitespace) and return the value present, or -1 if str's contents
+ * are anything else.
+ */
+static int readboolvalue(char const *str)
+{
+    char	d;
+
+    while (isspace(*str))
+	++str;
+    if (!*str)
+	return -1;
+    d = *str++;
+    while (isspace(*str))
+	++str;
+    if (*str)
+	return -1;
+    if (d == '0')
+	return 0;
+    else if (d == '1')
+	return 1;
+    else
+	return -1;
+}
+
+/* Parse a configuration file.
+ */
+int readcfgfile(option const* list, FILE *fp,
+		int (*callback)(int, char const*, void*), void *data)
+{
+    char		buf[1024];
+    option const       *opt;
+    char	       *name, *val, *p;
+    int			len, f, r;
+
+    while (fgets(buf, sizeof buf, fp) != NULL)
+    {
+	/* Strip off the trailing newline and any leading whitespace.
+	 * If the line begins with a hash sign, skip it entirely.
+	 */
+	len = strlen(buf);
+	if (len && buf[len - 1] == '\n')
+	    buf[--len] = '\0';
+	for (p = buf ; isspace(*p) ; ++p) ;
+	if (!*p || *p == '#')
+	    continue;
+
+	/* Find the end of the option's name and the beginning of the
+	 * parameter, if any.
+	 */
+	for (name = p ; *p && *p != '=' && !isspace(*p) ; ++p) ;
+	len = p - name;
+	for ( ; *p == '=' || isspace(*p) ; ++p) ;
+	val = p;
+
+	/* Is it on the list of valid options? Does it take a
+	 * full parameter, or just an optional boolean?
+	 */
+	for (opt = list ; opt->optval ; ++opt)
+	    if (opt->name && !strncmp(name, opt->name, len)
+			  && !opt->name[len])
+		    break;
+	if (!opt->optval) {
+	    docallback('?', name);
+	} else if (!*val && opt->arg == 1) {
+	    docallback(':', name);
+	} else if (*val && opt->arg == 0) {
+	    f = readboolvalue(val);
+	    if (f < 0)
+		docallback('=', name);
+	    else if (f == 1)
+		docallback(opt->optval, NULL);
+	} else {
+	    docallback(opt->optval, val);
+	}
+    }
+    return ferror(fp) ? -1 : 0;
 }
 
 /* Turn a string containing a cmdline into an argc-argv pair.

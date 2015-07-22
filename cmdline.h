@@ -44,6 +44,27 @@ extern int readoptions(option const* list, int argc, char **argv,
 		       int (*callback)(int opt, char const *val, void *data),
 		       void *data);
 
+/* Parse the given file. list is an array of option structs, in the
+ * same form as taken by readoptions(). fp is a pointer to an open
+ * text file. callback is the function to call for each line found in
+ * the configuration file. data is a pointer that is passed to each
+ * invocation of callback. The return value of readcfgfile() is the
+ * value returned from the last callback, or zero if no arguments were
+ * found, or -1 if an error occurred while reading the file.
+ *
+ * The function will ignore lines that contain only whitespace, or
+ * lines that begin with a hash sign. All other lines should be of the
+ * form "OPTION=VALUE", where OPTION is one of the long options in
+ * list. Whitespace around the equal sign is permitted. An option that
+ * takes no arguments can either have a VALUE of 0 or 1, or omit the
+ * "=VALUE" entirely. (A VALUE of 0 will behave the same as if the
+ * line was not present.)
+ */
+extern int readcfgfile(option const* list, FILE *fp,
+		       int (*callback)(int opt, char const *val, void *data),
+		       void *data);
+
+
 /* Create an argc-argv pair from a string containing a command line.
  * cmdline is the string to be parsed. argcp points to the variable to
  * receive the argc value, and argvp points to the variable to receive
