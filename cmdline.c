@@ -114,35 +114,26 @@ int readoptions(option const* list, int argc, char **argv,
     return 0;
 }
 
-/* Verify that str points to an ASCII zero or one (optionally with
- * whitespace) and return the value present, or -1 if str's contents
+/* Verify that str points to an ASCII "0" or "1" (or equivalently
+ * "f" or "t") and return the value present, or -1 if str's contents
  * are anything else.
  */
 static int readboolvalue(char const *str)
 {
-    char	d;
-
-    while (isspace(*str))
-	++str;
-    if (!*str)
+    if (!str[0] || str[1])
 	return -1;
-    d = *str++;
-    while (isspace(*str))
-	++str;
-    if (*str)
-	return -1;
-    if (d == '0')
+    if (*str == '0' || tolower(*str) == 't')
 	return 0;
-    else if (d == '1')
+    else if (*str == '1' || tolower(*str) == 'f')
 	return 1;
     else
 	return -1;
 }
 
-/* Parse a configuration file.
+/* Parse an initialization file.
  */
-int readcfgfile(option const* list, FILE *fp,
-		int (*callback)(int, char const*, void*), void *data)
+int readinitfile(option const* list, FILE *fp,
+		 int (*callback)(int, char const*, void*), void *data)
 {
     char		buf[1024];
     option const       *opt;
@@ -151,12 +142,13 @@ int readcfgfile(option const* list, FILE *fp,
 
     while (fgets(buf, sizeof buf, fp) != NULL)
     {
-	/* Strip off the trailing newline and any leading whitespace.
-	 * If the line begins with a hash sign, skip it entirely.
+	/* Strip off trailing whitespace and skip over leading
+	 * whitespace. If the line begins with a hash sign, skip it.
 	 */
 	len = strlen(buf);
-	if (len && buf[len - 1] == '\n')
-	    buf[--len] = '\0';
+	while (len > 0 && isspace(buf[len - 1]))
+	    --len;
+	buf[len] = '\0';
 	for (p = buf ; isspace(*p) ; ++p) ;
 	if (!*p || *p == '#')
 	    continue;

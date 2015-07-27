@@ -56,13 +56,13 @@ extern int readoptions(option const* list, int argc, char **argv,
  * lines that begin with a hash sign. All other lines should be of the
  * form "OPTION=VALUE", where OPTION is one of the long options in
  * list. Whitespace around the equal sign is permitted. An option that
- * takes no arguments can either have a VALUE of 0 or 1, or omit the
+ * takes no arguments can either have a VALUE of "0" or "1", or omit the
  * "=VALUE" entirely. (A VALUE of 0 will behave the same as if the
  * line was not present.)
  */
-extern int readcfgfile(option const* list, FILE *fp,
-		       int (*callback)(int opt, char const *val, void *data),
-		       void *data);
+extern int readinitfile(option const* list, FILE *fp,
+			int (*callback)(int opt, char const *val, void *data),
+			void *data);
 
 
 /* Create an argc-argv pair from a string containing a command line.
