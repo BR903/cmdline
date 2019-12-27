@@ -1,4 +1,22 @@
 This is a getopt_long() replacement that I use when I'm writing code
-that needs to be portable to non-Unix environments (i.e. Windows). It
-uses a different organization, making use of callbacks instead of
-having a function invoked repeatedly.
+that needs to be portable to non-Unix environments (i.e. Windows).
+
+cmdline uses a different organization, making use of callbacks instead
+of having a function invoked repeatedly. This permits the API to be
+called recursively, e.g. if an init file is named explicitly in argv.
+
+The code also provides an API for parsing a single string into
+argc/argv values, allowing for such things as accepting multiple
+arguments via an environment variable.
+
+This code is free and unencumbered software released into the public
+domain, and you are free to use, copy, modify, publish, distribute or
+sell this software. In jurisdictions that recognize copyright laws,
+any and all copyright interest in the software is dedicated to the
+public domain, with the intent of relinquishing in perpetuity all
+present and future rights to this software under copyright law. This
+software is provided "as is", without warranty of any kind, express or
+implied.
+
+Brian Raiter
+<breadbox@muppetlabs.com>
