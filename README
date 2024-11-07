@@ -1,3 +1,13 @@
+  NOTE TO GITHUB USERS
+
+The current location for this repository is here:
+
+  <https://git.sr.ht/~breadbox/cmdline.git>
+
+This github.com repository will soon be deleted.
+
+
+
 This is a getopt_long() replacement that I use when I'm writing code
 that needs to be portable to non-Unix environments (i.e. Windows).
 
